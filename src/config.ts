@@ -58,11 +58,11 @@ export const profileConfig: ProfileConfig = {
     //                                     // `pnpm add @iconify-json/<icon-set-name>`
     //   url: 'https://twitter.com',
     // },
-    {
-      name: 'email',
-      icon: 'fa-solid:envelope',
-      url: 'guanhao2022@sjtu.edu.cn',
-    },
+    // {
+    //   name: 'email',
+    //   icon: 'fa-solid:envelope',
+    //   url: 'guanhao2022@sjtu.edu.cn',
+    // },
     {
       name: 'GitHub',
       icon: 'fa6-brands:github',
