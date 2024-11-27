@@ -40,7 +40,7 @@ ssh -N -f -L localhost:7687:localhost:7687 id@host
 
 1. 参考[**README.md**](https://gist.github.com/kuzeko/9b5dbdf52102a59b9d3865c70a8576a0)中的download脚本下载分块数据，将下载的数据拷贝到docker内部的import文件夹下docker exec -it neo4j /bin/bash进入docker。
 2. 安装[neosemantics](https://github.com/neo4j-labs/neosemantics)插件：先将插件下载到plugins文件夹下，再在neo4j-conf中添加dbms.unmanaged_extension_classes=n10s.endpoint=/rdf，这里我起先使用apoc插件但是没有成功。
-    
+   
     wget https://github.com/neo4j-labs/neosemantics/releases/download/5.20.0/neosemantics-5.20.0.jar
     
     CREATE CONSTRAINT n10s_unique_uri FOR (r:Resource) REQUIRE r.uri IS UNIQUE;
@@ -56,11 +56,30 @@ DETACH DELETE n;
 
 ## 导入csv数据
 
-docker cp
+启动：
 
-docker stop
+```
+docker run --name [docker_name] -d -v /home/hguan/yago/import:/var/lib/neo4j/import   -v /home/hguan/yago/data:/var/lib/neo4j/data -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=none neo4j
+```
 
-docker run --rm -v /home/hguan/dbdemo/dblp/import:/var/lib/neo4j/import -v /home/hguan/dbdemo/dblp/data:/var/lib/neo4j/data neo4j neo4
-j-admin database import full --overwrite-destination --nodes=/var/lib/neo4j/import/nodes.csv --relationships=/var/lib/neo4j/import/relationships.csv
+ **注意端口不能冲突，:前面应该选还没有被映射过的端口**
 
-docker start
+```
+docker cp [your_file_path] [docker_name]:[docker_path(/var/lib/neo4j/import in this case)]
+```
+
+```
+docker stop [docker_name]
+```
+
+```
+docker run --rm -v /home/hguan/dbdemo/dblp/import:/var/lib/neo4j/import -v /home/hguan/dbdemo/dblp/data:/var/lib/neo4j/data neo4j neo4j-admin database import full --overwrite-destination --nodes=/var/lib/neo4j/import/nodes.csv --relationships=/var/lib/neo4j/import/relationships.csv
+```
+
+//这里是停止原来的docker，新建一个docker，在新建这个docker的时候把已经挂载好的目录中的数据加载到数据库中，覆盖掉原先数据库的内容，这样重新启动原先的数据库就可以看到需要的内容了
+
+```
+docker start [docker_name]
+```
+
+重新启动docker
