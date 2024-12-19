@@ -10,7 +10,7 @@ image: ''
 
 tags: [notes]
 
-category: 'tools'
+category: 'learn'
 
 draft: false 
 
