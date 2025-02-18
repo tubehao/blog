@@ -21,6 +21,62 @@ draft: false
 
 ## 进阶内容
 
+### git stash
+
+git stash save ""
+
+git stash list, git stash show stash@{0}默认展示第一个
+
+git stash会显示在log中，可以自由在不同的分支间切换。
+
+### git blame
+
+显示每一行代码的最后修改记录。它可以帮助你追踪代码的变更历史，了解每一行代码是谁在什么时间进行的修改。这对于调试、代码审查和理解代码变更的背景非常有用。
+
+git blame [options] <file>
+
+- **`-L <start>,<end>`**:
+  - 仅显示文件中从 `<start>` 行到 `<end>` 行的变更记录。
+- **`-C`**:
+  - 追踪代码块的移动和复制。
+- **`-M`**:
+  - 追踪代码块的移动。
+- **`-w`**:
+  - 忽略空白字符的变化。
+
+### git filter-branch
+
+一个强大的 Git 命令，用于在历史提交中进行批量重写。它可以用于修改、删除或重写 Git 历史中的提交记录。以下是该命令的详细解释：
+
+1. **`git filter-branch`**:
+   - 这是一个用于重写 Git 历史的命令。它可以对多个提交进行批量修改。
+2. **`--force`**:
+   - 强制执行命令，即使在某些情况下 Git 会建议不要这样做。它会覆盖已经存在的重写历史。
+3. **`--index-filter`**:
+   - 这是一个用于修改索引（暂存区）的过滤器。它只对索引进行操作，比 `--tree-filter` 更快，因为它不需要检出工作树。
+4. **`'git rm --cached --ignore-unmatch ./my_password'`**:
+   - 这是一个在index filter中执行的命令：
+     - `git rm --cached`：从索引中删除文件，但不删除工作目录中的文件。
+     - `--ignore-unmatch`：如果文件不存在，则忽略错误。
+     - `./my_password`：指定要删除的文件路径。在这个例子中，它是 `./my_password`。
+5. **`--prune-empty`**:
+   - 删除任何在过滤过程中变为空的提交。这样可以保持历史的整洁性。
+6. **`--tag-name-filter cat`**:
+   - 这个选项用于处理标签。`cat` 表示保留标签名不变。
+7. **`-- --all`**:
+   - 这部分指定过滤的范围：
+     - `--`：表示选项的结束，接下来的参数是要处理的分支或其他引用。
+     - `--all`：表示对所有引用（包括所有分支和标签）进行操作。
+
+这个命令的整体作用是：
+
+- 在 Git 仓库的所有历史记录中，强制删除索引中名为 `./my_password` 的文件。
+- 如果某个提交在删除该文件后变为空提交，则该提交也会被删除。
+- 标签名称保持不变。
+- 该操作会影响仓库中的所有分支和标签。
+
+### 缩写
+
 参考 [https://www.atlassian.com/blog/git/advanced-git-aliases](https://www.atlassian.com/blog/git/advanced-git-aliases)
 
 ```
@@ -52,7 +108,7 @@ Which will list to screen all new commits have been created with the previous p
 
 1. **打开终端**：打开你的命令行工具。
 2. **导航到你的项目目录**：
-    
+   
     ```bash
     bashCopy code
     cd path/to/MyMainProject
@@ -60,7 +116,7 @@ Which will list to screen all new commits have been created with the previous p
     ```
     
 3. **添加外部仓库作为子树**：
-    
+   
     ```bash
     bashCopy code
     git subtree add --prefix=external_lib https://github.com/example/ExternalLibrary.git master --squash
@@ -243,7 +299,7 @@ git diagose [storage.py](http://storage.py/)
             - **`!important.log`** 会重新包含（不忽略）名为 **`important.log`** 的文件，即使前面的规则指定忽略 **`.log`** 文件。
     3. **将 `.gitignore` 文件添加到仓库**：
         - 将 **`.gitignore`** 文件添加到仓库并提交。
-            
+          
             ```bash
             bashCopy code
             git add .gitignore
